@@ -516,7 +516,7 @@ textarea:focus {
 .decoration_item a:focus {
 	border: none;
 	text-decoration: none;
-	color: #0089cd;
+	/* color: #0089cd; */
 	/*border-top: 1rem solid @blue;
 				height: 8rem;
 				padding: 2rem 1rem;
@@ -532,10 +532,12 @@ textarea:focus {
 	height: 8rem;
 	padding: 2rem 0;
 	border-top: 1rem solid #f7f7f7;
+	color: #0089cd;
 }
 
 .decoration_item .after_click {
 	border-top: 1rem solid #0089cd;
+	color: #0089cd;
 	height: 8rem;
 	padding: 2rem 0;
 	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), color-stop(0%, #ebebeb), to(rgba(255, 255, 255, 0)));
