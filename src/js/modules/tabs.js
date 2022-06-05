@@ -6,7 +6,7 @@ function tabs(headerSelector, tabSelector, contentSelector, activeClass, display
 
 	function hideTabContent() {
 		content.forEach((item) => {
-			item.style.display = 'none';
+			item.style.cssText = 'display: none;';
 		});
 
 		tab.forEach((item) => {

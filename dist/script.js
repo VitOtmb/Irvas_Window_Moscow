@@ -14010,19 +14010,168 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _slider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./slider */ "./src/js/slider.js");
-/* harmony import */ var _modules_modules__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/modules */ "./src/js/modules/modules.js");
+/* harmony import */ var _modules_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/modals */ "./src/js/modules/modals.js");
 /* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
 /* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
+/* harmony import */ var _modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/changeModalState */ "./src/js/modules/changeModalState.js");
+/* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/timer */ "./src/js/modules/timer.js");
+/* harmony import */ var _modules_images__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/images */ "./src/js/modules/images.js");
 
 
 
 
-window.addEventListener("DOMContentLoaded", () => {
-  Object(_modules_modules__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])(".glazing_slider", ".glazing_block", ".glazing_content", "active");
-  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])(".decoration_slider", ".no_click", ".decoration_content > div > div", "after_click");
-  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])();
+
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  'use strict';
+
+  let modalState = {};
+  let deadline = '2022-06-30';
+  Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
+  Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
+  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalState);
+  Object(_modules_timer__WEBPACK_IMPORTED_MODULE_5__["default"])('.container1', deadline);
+  Object(_modules_images__WEBPACK_IMPORTED_MODULE_6__["default"])();
 });
+
+/***/ }),
+
+/***/ "./src/js/modules/calcScroll.js":
+/*!**************************************!*\
+  !*** ./src/js/modules/calcScroll.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function calcScroll() {
+  // Создаем блок и помещаем его в body
+  let div = document.createElement('div');
+  div.style.cssText = 'width: 50px; heigth: 50px; overflow-y: scroll; visibility: hidden;';
+  document.body.appendChild(div); // Вычисляем ширину скролла
+
+  let scrollWidth = div.offsetWidth - div.clientWidth; // Удаляем побочный элемент
+
+  div.remove();
+  return scrollWidth;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (calcScroll);
+
+/***/ }),
+
+/***/ "./src/js/modules/changeModalState.js":
+/*!********************************************!*\
+  !*** ./src/js/modules/changeModalState.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chekNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./chekNumInputs */ "./src/js/modules/chekNumInputs.js");
+
+
+const changeModalState = state => {
+  const windowForm = document.querySelectorAll('.balcon_icons_img'),
+        windowWigth = document.querySelectorAll('#width'),
+        windowHeigth = document.querySelectorAll('#height'),
+        windowType = document.querySelectorAll('#view_type'),
+        windowProfile = document.querySelectorAll('.checkbox');
+  Object(_chekNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#width');
+  Object(_chekNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#height');
+
+  function bindActionToElements(event, elem, property) {
+    elem.forEach((item, i) => {
+      item.addEventListener(event, () => {
+        switch (item.nodeName) {
+          case 'SPAN':
+            state[property] = i;
+            break;
+
+          case 'INPUT':
+            if (item.getAttribute('type') === 'checkbox') {
+              i === 0 ? state[property] = 'Холодное' : state[property] = 'Тёплое';
+              elem.forEach((box, j) => {
+                box.checked = false;
+
+                if (i === j) {
+                  box.checked = true;
+                }
+              });
+            } else {
+              state[property] = item.value;
+            }
+
+            break;
+
+          case 'SELECT':
+            state[property] = item.value;
+            break;
+        }
+
+        console.log(state);
+      });
+    });
+  }
+
+  bindActionToElements('click', windowForm, 'form');
+  bindActionToElements('input', windowWigth, 'width');
+  bindActionToElements('input', windowHeigth, 'height');
+  bindActionToElements('change', windowType, 'type');
+  bindActionToElements('change', windowProfile, 'profile');
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (changeModalState);
+
+/***/ }),
+
+/***/ "./src/js/modules/chekNumInputs.js":
+/*!*****************************************!*\
+  !*** ./src/js/modules/chekNumInputs.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const checkNumInputs = selector => {
+  const numInputs = document.querySelectorAll(selector); // Проверка на ввод только чисел в поле с номером телефона
+
+  numInputs.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/\D/, '');
+    });
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (checkNumInputs);
+
+/***/ }),
+
+/***/ "./src/js/modules/closeModalAfterSend.js":
+/*!***********************************************!*\
+  !*** ./src/js/modules/closeModalAfterSend.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const closeModalAfterSend = () => {
+  const windows = document.querySelectorAll('[data-modal]');
+  windows.forEach(window => {
+    window.style.cssText = 'display: none;';
+    document.body.style.cssText = 'overflow: ""';
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (closeModalAfterSend);
 
 /***/ }),
 
@@ -14035,15 +14184,28 @@ window.addEventListener("DOMContentLoaded", () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-const forms = () => {
-  const form = document.querySelectorAll('form');
-  const input = document.querySelectorAll('input'); // Объект с сообщениями, которые мы будем выводить пользователю после отправки формы
+/* harmony import */ var _chekNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./chekNumInputs */ "./src/js/modules/chekNumInputs.js");
+/* harmony import */ var _closeModalAfterSend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./closeModalAfterSend */ "./src/js/modules/closeModalAfterSend.js");
+
+
+
+const form = state => {
+  const forms = document.querySelectorAll('form'),
+        inputs = document.querySelectorAll('input'); // const phoneInputs = document.querySelectorAll('input[name="user_phone"]');
+  // Проверка на ввод только чисел в поле с номером телефона
+
+  Object(_chekNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('input[name="user_phone"]'); // phoneInputs.forEach((item) => {
+  // 	item.addEventListener('input', () => {
+  // 		item.value = item.value.replace(/\D/, '');
+  // 	});
+  // });
+  // Объект с сообщениями, которые мы будем выводить пользователю после отправки формы
 
   const message = {
     loading: 'Загрузка...',
     success: 'Спасибо. Скоро мы с вами свяжемся!',
     failure: 'Что-то пошло не так...'
-  }; // Функция
+  }; // Функция отправки данных
 
   const postData = async (url, data) => {
     document.querySelector('.status').textContent = message.loading;
@@ -14052,64 +14214,156 @@ const forms = () => {
       body: data
     });
     return await res.text();
+  }; // Функция очистки инпутов
+
+
+  const clearInput = () => {
+    inputs.forEach(item => {
+      item.value = '';
+    });
   };
 
-  form.forEach(item => {
+  forms.forEach(item => {
     item.addEventListener('submit', event => {
       event.preventDefault();
       let statusMessage = document.createElement('div');
       statusMessage.classList.add('status');
       item.appendChild(statusMessage);
       const formData = new FormData(item);
+
+      if (item.getAttribute('data-calc') === 'end') {
+        for (let key in state) {
+          formData.append(key, state[key]);
+        }
+      }
+
       postData('../../assets/server.php', formData).then(res => {
         console.log(res);
         statusMessage.textContent = message.success;
+        setTimeout(() => {
+          Object(_closeModalAfterSend__WEBPACK_IMPORTED_MODULE_1__["default"])();
+        }, 2000);
       }).catch(() => {
         statusMessage.textContent = message.failure;
-      }).finally(() => {
-        setInterval(() => {
-          statusMessage.remove();
+        setTimeout(() => {
+          Object(_closeModalAfterSend__WEBPACK_IMPORTED_MODULE_1__["default"])();
         }, 2000);
+      }).finally(() => {
+        clearInput(); // setInterval(() => {
+        // 	statusMessage.remove();
+        // }, 2000);
       });
     });
   });
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (forms);
+/* harmony default export */ __webpack_exports__["default"] = (form);
 
 /***/ }),
 
-/***/ "./src/js/modules/modules.js":
-/*!***********************************!*\
-  !*** ./src/js/modules/modules.js ***!
-  \***********************************/
+/***/ "./src/js/modules/images.js":
+/*!**********************************!*\
+  !*** ./src/js/modules/images.js ***!
+  \**********************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function modules() {
+/* harmony import */ var _calcScroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calcScroll */ "./src/js/modules/calcScroll.js");
+
+
+const images = () => {
+  const imgPopup = document.createElement('div'),
+        workSection = document.querySelector('.works'),
+        bigImg = document.createElement('img'),
+        scroll = Object(_calcScroll__WEBPACK_IMPORTED_MODULE_0__["default"])(); // Добавляем созданому div класс popup, который есть в CSS
+
+  imgPopup.classList.add('popup'); // Вставляем созданный div в секцию work
+
+  workSection.appendChild(imgPopup); // Вставляем img с большой картинкой в созданный div
+
+  imgPopup.appendChild(bigImg);
+  workSection.addEventListener('click', e => {
+    e.preventDefault();
+    const target = e.target;
+
+    if (target && target.classList.contains('preview')) {
+      imgPopup.classList.add('faded_modal');
+      imgPopup.style.cssText = 'display: flex; justify-content: center; align-items: center;'; // Получаем путь родительского узла(parentNode) при клике на картинку, т.к. картинка лежит внутри ссылки
+
+      const path = target.parentNode.getAttribute('href');
+      bigImg.style.cssText = 'max-width: 90vh; max-height: 90vh;';
+      document.body.style.cssText = `overflow: hidden; margin-right: ${scroll}px;`;
+      /* Отключает скрол при показе модального окна */
+      // Вставляем путь в артибут src большой картинки
+
+      bigImg.setAttribute('src', path);
+    } //
+
+
+    if (target && target.matches('div.popup')) {
+      imgPopup.style.cssText = 'display: none;';
+      document.body.style.cssText = 'overflow: ""; margin-right: 0px;';
+      /* Включает скрол при показе модального окна */
+    }
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (images);
+
+/***/ }),
+
+/***/ "./src/js/modules/modals.js":
+/*!**********************************!*\
+  !*** ./src/js/modules/modals.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _calcScroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calcScroll */ "./src/js/modules/calcScroll.js");
+
+
+function modals() {
   function bindModal(triggerSelector, modalSelector, closeSelector) {
+    let closeClickOverlay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
     const trigger = document.querySelectorAll(triggerSelector),
           modal = document.querySelector(modalSelector),
-          close = document.querySelector(closeSelector);
+          close = document.querySelector(closeSelector),
+          windows = document.querySelectorAll('[data-modal]'),
+          scroll = Object(_calcScroll__WEBPACK_IMPORTED_MODULE_0__["default"])();
     trigger.forEach(item => {
-      item.addEventListener("click", event => {
+      item.addEventListener('click', event => {
         if (event.target) {
           event.preventDefault();
         }
 
-        modal.style.cssText = "display: block;";
-        document.body.style.cssText = "overflow: hidden;"; // document.body.classList.add("modal-open"); /* из библиотеки bootstrap */
+        windows.forEach(item => {
+          item.style.cssText = 'display: none';
+        });
+        modal.style.cssText = 'display: block;';
+        document.body.style.cssText = `overflow: hidden; margin-right: ${scroll}px;`;
+        /* Отключает скрол при показе модального окна */
+        // document.body.classList.add("modal-open"); /* из библиотеки bootstrap */
       });
-      close.addEventListener("click", () => {
-        modal.style.display = "none";
-        document.body.style.overflow = ""; // document.body.classList.remove("modal-open"); /* из библиотеки bootstrap */
+      close.addEventListener('click', () => {
+        windows.forEach(item => {
+          item.style.cssText = 'display: none';
+        });
+        modal.style.cssText = 'display: none';
+        document.body.style.cssText = 'overflow: ""; margin-right: 0px;';
+        /* Включает скрол при показе модального окна */
+        // document.body.classList.remove("modal-open"); /* из библиотеки bootstrap */
       });
-      modal.addEventListener("click", event => {
-        if (event.target === modal) {
-          modal.style.display = "none";
-          document.body.style.overflow = ""; // document.body.classList.remove("modal-open"); /* из библиотеки bootstrap */
+      modal.addEventListener('click', event => {
+        if (event.target === modal && closeClickOverlay) {
+          windows.forEach(item => {
+            item.style.cssText = 'display: none';
+          });
+          modal.style.cssText = 'display: none';
+          document.body.style.cssText = 'overflow: ""; margin-right: 0px;'; // document.body.classList.remove("modal-open"); /* из библиотеки bootstrap */
         }
       });
     });
@@ -14117,17 +14371,19 @@ function modules() {
 
   function showModalByTime(selector, time) {
     setTimeout(() => {
-      document.querySelector(selector).style.display = "block";
-      document.body.style.overflow = "hidden";
+      document.querySelector(selector).style.cssText = 'display: block';
+      document.body.style.cssText = 'overflow: hidden';
     }, time);
   }
 
-  bindModal(".popup_engineer_btn", ".popup_engineer", ".popup_engineer .popup_close");
-  bindModal(".phone_link", ".popup", ".popup .popup_close");
-  showModalByTime(".popup", 60000);
+  bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
+  bindModal('.phone_link', '.popup', '.popup .popup_close');
+  bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close', false);
+  bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
+  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false); // showModalByTime('.popup', 600000);
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (modules);
+/* harmony default export */ __webpack_exports__["default"] = (modals);
 
 /***/ }),
 
@@ -14141,13 +14397,14 @@ function modules() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 function tabs(headerSelector, tabSelector, contentSelector, activeClass) {
+  let display = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'block';
   const header = document.querySelector(headerSelector),
         tab = document.querySelectorAll(tabSelector),
         content = document.querySelectorAll(contentSelector); // active = document.querySelector(activeClass);
 
   function hideTabContent() {
     content.forEach(item => {
-      item.style.display = "none";
+      item.style.cssText = 'display: none;';
     });
     tab.forEach(item => {
       item.classList.remove(activeClass);
@@ -14156,16 +14413,16 @@ function tabs(headerSelector, tabSelector, contentSelector, activeClass) {
 
   function showTabContent() {
     let tabItem = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    content[tabItem].style.display = "block";
+    content[tabItem].style.display = display;
     tab[tabItem].classList.add(activeClass);
   }
 
   hideTabContent();
   showTabContent();
-  header.addEventListener("click", event => {
+  header.addEventListener('click', event => {
     const target = event.target;
 
-    if (target.classList.contains(tabSelector.replace(/\./, "")) || target.parentNode.classList.contains(tabSelector.replace(/\./, ""))) {
+    if (target.classList.contains(tabSelector.replace(/\./, '')) || target.parentNode.classList.contains(tabSelector.replace(/\./, ''))) {
       tab.forEach((item, i) => {
         if (target == item || target.parentNode == item) {
           hideTabContent();
@@ -14177,6 +14434,82 @@ function tabs(headerSelector, tabSelector, contentSelector, activeClass) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (tabs);
+
+/***/ }),
+
+/***/ "./src/js/modules/timer.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/timer.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const timer = (id, deadline) => {
+  function getTimeRemaining(endtime) {
+    let t = Date.parse(endtime) - Date.parse(new Date())
+    /* Date.parse() - переводит дату, полученную в виде строки, в число*/
+    ,
+
+    /* теперь необходимо разницу, полученную в переменной t в милисекундах перевести в дни, часы и секунды таймера на странице */
+    days = Math.floor(t / (1000 * 60 * 60 * 24))
+    /* 1000 - кол-во милисекунд в секунде * 60 - кол-во секунд в минуте * 60 - кол-во минут в часе * 24 - кол-во часов в сутках */
+    ,
+        hours = Math.floor(t / (1000 * 60 * 60) % 24)
+    /* остаток от деления на 24 даст нам кол-во часов, которых не хватает до полных суток. */
+    ,
+        minutes = Math.floor(t / (1000 * 60) % 60),
+        seconds = Math.floor(t / 1000 % 60);
+    return {
+      total: t,
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds
+    };
+  } // Функция, которая добавляет ноль к числу, если оно меньше 10
+
+
+  function addZero(num) {
+    if (num >= 0 && num < 10) {
+      return `0${num}`;
+    } else {
+      return num;
+    }
+  }
+
+  const setClock = (selector, endtime) => {
+    const timer = document.querySelector(selector),
+          days = timer.querySelector('#days'),
+          hours = timer.querySelector('#hours'),
+          minutes = timer.querySelector('#minutes'),
+          seconds = timer.querySelector('#seconds'),
+          timeInterval = setInterval(updateClock, 1000);
+    updateClock();
+    /* запускаем функцию здесь, чтобы при обновлении страницы таймер правильно отображался */
+
+    function updateClock() {
+      const t = getTimeRemaining(endtime);
+      days.textContent = addZero(t.days);
+      hours.textContent = addZero(t.hours);
+      minutes.textContent = addZero(t.minutes);
+      seconds.textContent = addZero(t.seconds);
+
+      if (t.total <= 0) {
+        clearInterval(timeInterval);
+        days.innerHTML = '00';
+        hours.innerHTML = '00';
+        minutes.innerHTML = '00';
+        seconds.innerHTML = '00';
+      }
+    }
+  };
+
+  setClock(id, deadline);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (timer);
 
 /***/ }),
 

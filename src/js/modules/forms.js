@@ -1,8 +1,9 @@
 import checkNumInputs from './chekNumInputs';
+import closeModalAfterSend from './closeModalAfterSend';
 
 const form = (state) => {
-	const forms = document.querySelectorAll('form');
-	const inputs = document.querySelectorAll('input');
+	const forms = document.querySelectorAll('form'),
+		inputs = document.querySelectorAll('input');
 	// const phoneInputs = document.querySelectorAll('input[name="user_phone"]');
 
 	// Проверка на ввод только чисел в поле с номером телефона
@@ -56,15 +57,21 @@ const form = (state) => {
 				.then((res) => {
 					console.log(res);
 					statusMessage.textContent = message.success;
+					setTimeout(() => {
+						closeModalAfterSend();
+					}, 2000);
 				})
 				.catch(() => {
 					statusMessage.textContent = message.failure;
+					setTimeout(() => {
+						closeModalAfterSend();
+					}, 2000);
 				})
 				.finally(() => {
 					clearInput();
-					setInterval(() => {
-						statusMessage.remove();
-					}, 4000);
+					// setInterval(() => {
+					// 	statusMessage.remove();
+					// }, 2000);
 				});
 		});
 	});
